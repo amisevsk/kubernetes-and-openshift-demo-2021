@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-deployment
+  labels:
+    app: demo-app
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: demo-app
+  template:
+    metadata:
+      labels:
+        app: demo-app
+    spec:
+      containers:
+      - image: quay.io/amisevsk/kubernetes-demo:latest
+        name: apache
+        env:
+        - name: HELLO
+          value: WORLD
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: our-configmap
+          mountPath: /usr/local/apache2/htdocs/my-files
+      volumes:
+        - name: our-configmap
+          configMap:
+            name: demo-configmap
+            optional: true

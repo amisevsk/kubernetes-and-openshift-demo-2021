@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: demo-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  labels:
+    app: demo-app
+spec:
+  rules:
+    # Note on Kubernetes: replace $ROUTING_SUFFIX with the
+    # url for your kubernetes cluster! For example, on minikube,
+    # the host below should be something like
+    #   demo-app.192.168.49.2.nip.io
+    # On minikube, you can get the appropriate value by running
+    #   echo "$(minikube ip).nip.io"
+    - host: demo-app.$ROUTING_SUFFIX
+      http:
+        paths:
+          - backend:
+              service:
+                name: demo-service
+                port:
+                  number: 8080
+            path: /
+            pathType: ImplementationSpecific

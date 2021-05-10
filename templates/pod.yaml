@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: a-bare-pod
+  labels:
+    app: demo-app
+spec:
+  containers:
+  - image: quay.io/amisevsk/kubernetes-demo:latest
+    name: apache
+    env:
+    - name: HELLO
+      value: WORLD
+    ports:
+    - containerPort: 8080
+    volumeMounts:
+    - name: our-configmap
+      mountPath: /usr/local/apache2/htdocs/
+  volumes:
+    - name: our-configmap
+      configMap:
+        name: demo-configmap
+        optional: true
